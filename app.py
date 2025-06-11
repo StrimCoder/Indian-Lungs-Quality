@@ -288,7 +288,7 @@ if 'last_refresh_time' not in st.session_state:
 # Auto-refresh every 60 seconds in the background
 if time.time() - st.session_state.last_refresh_time > 60:
     st.session_state.last_refresh_time = time.time()
-    st.experimental_rerun()
+    st.rerun()
 
 # Centered refresh button
 col1, col2, col3 = st.columns([1, 1, 1])
@@ -337,6 +337,137 @@ if 'weather' not in st.session_state or 'aqi' not in st.session_state or 'foreca
 if st.session_state.weather and st.session_state.aqi is not None:
     weather = st.session_state.weather
     aqi = st.session_state.aqi
+    
+    # 7-Day Weather Forecast (moved to top)
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 style="margin-bottom: 20px; text-align: center;">7-Day Weather Forecast</h3>', unsafe_allow_html=True)
+    
+    forecast = st.session_state.forecast
+    if isinstance(forecast, list):
+        # Create forecast cards
+        forecast_cols = st.columns(7)
+        
+        # Custom CSS for weather icons
+        st.markdown("""
+        <style>
+        .weather-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        .forecast-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        .forecast-date {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .forecast-temp {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #4776E6;
+        }
+        .forecast-desc {
+            font-size: 12px;
+            color: #e0e0e0;
+            margin-top: 5px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Weather icon mapping
+        weather_icons = {
+            "01d": "☀️", "01n": "🌙",  # clear sky
+            "02d": "⛅", "02n": "☁️",  # few clouds
+            "03d": "☁️", "03n": "☁️",  # scattered clouds
+            "04d": "☁️", "04n": "☁️",  # broken clouds
+            "09d": "🌧️", "09n": "🌧️",  # shower rain
+            "10d": "🌦️", "10n": "🌧️",  # rain
+            "11d": "⛈️", "11n": "⛈️",  # thunderstorm
+            "13d": "❄️", "13n": "❄️",  # snow
+            "50d": "🌫️", "50n": "🌫️",  # mist
+        }
+        
+        for i, day in enumerate(forecast):
+            with forecast_cols[i]:
+                icon = weather_icons.get(day.get("icon", "01d"), "☁️")
+                st.markdown(f"""
+                <div class="forecast-card">
+                    <div class="forecast-date">{day["date"]}</div>
+                    <div class="weather-icon">{icon}</div>
+                    <div class="forecast-temp">{day["temp"]}°C</div>
+                    <div class="forecast-desc">{day["description"]}</div>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.error("Unable to load forecast data.")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Add partition/divider after the forecast
+    st.markdown("""
+    <div style="border-top: 2px solid rgba(71, 118, 230, 0.3); margin: 30px 0; padding-top: 5px;"></div>
+    """, unsafe_allow_html=True)
+    
+    # AQI Leaderboard (moved to appear after the forecast)
+    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+    st.markdown('<h3 style="margin-bottom: 20px; text-align: center;">Indian Cities AQI Leaderboard</h3>', unsafe_allow_html=True)
+    
+    if 'leaderboard' in st.session_state:
+        leaderboard = st.session_state.leaderboard
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown('<h4 style="text-align: center; color: #4CAF50;">🌿 Cities with Best Air Quality</h4>', unsafe_allow_html=True)
+            
+            # Create a table for best cities
+            for i, city_data in enumerate(leaderboard["best"]):
+                bg_color = "rgba(255, 255, 255, 0.05)"
+                if i % 2 == 0:
+                    bg_color = "rgba(255, 255, 255, 0.02)"
+                    
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; padding: 8px 15px; background-color: {bg_color}; border-radius: 5px; margin-bottom: 5px;">
+                    <div style="width: 30px; font-weight: bold; color: #e0e0e0;">#{i+1}</div>
+                    <div style="flex-grow: 1; font-weight: bold;">{city_data['city']}</div>
+                    <div style="width: 50px; text-align: right; font-weight: bold; color: {city_data['color']};">{city_data['aqi']}</div>
+                    <div style="width: 100px; text-align: right; color: {city_data['color']};">{city_data['category']}</div>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown('<h4 style="text-align: center; color: #F44336;">🏭 Cities with Worst Air Quality</h4>', unsafe_allow_html=True)
+            
+            # Create a table for worst cities
+            for i, city_data in enumerate(leaderboard["worst"]):
+                bg_color = "rgba(255, 255, 255, 0.05)"
+                if i % 2 == 0:
+                    bg_color = "rgba(255, 255, 255, 0.02)"
+                    
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; padding: 8px 15px; background-color: {bg_color}; border-radius: 5px; margin-bottom: 5px;">
+                    <div style="width: 30px; font-weight: bold; color: #e0e0e0;">#{i+1}</div>
+                    <div style="flex-grow: 1; font-weight: bold;">{city_data['city']}</div>
+                    <div style="width: 50px; text-align: right; font-weight: bold; color: {city_data['color']};">{city_data['aqi']}</div>
+                    <div style="width: 100px; text-align: right; color: {city_data['color']};">{city_data['category']}</div>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.info("Loading leaderboard data...")
+        
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Add another partition after the leaderboard
+    st.markdown("""
+    <div style="border-top: 2px solid rgba(71, 118, 230, 0.3); margin: 30px 0; padding-top: 5px;"></div>
+    """, unsafe_allow_html=True)
     
     # Metrics with custom styling
     col1, col2, col3, col4 = st.columns(4)
@@ -466,126 +597,9 @@ if st.session_state.weather and st.session_state.aqi is not None:
     st.plotly_chart(animated_fig, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # AQI Leaderboard
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 style="margin-bottom: 20px; text-align: center;">Indian Cities AQI Leaderboard</h3>', unsafe_allow_html=True)
+
     
-    if 'leaderboard' in st.session_state:
-        leaderboard = st.session_state.leaderboard
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown('<h4 style="text-align: center; color: #4CAF50;">🌿 Cities with Best Air Quality</h4>', unsafe_allow_html=True)
-            
-            # Create a table for best cities
-            for i, city_data in enumerate(leaderboard["best"]):
-                bg_color = "rgba(255, 255, 255, 0.05)"
-                if i % 2 == 0:
-                    bg_color = "rgba(255, 255, 255, 0.02)"
-                    
-                st.markdown(f"""
-                <div style="display: flex; align-items: center; padding: 8px 15px; background-color: {bg_color}; border-radius: 5px; margin-bottom: 5px;">
-                    <div style="width: 30px; font-weight: bold; color: #e0e0e0;">#{i+1}</div>
-                    <div style="flex-grow: 1; font-weight: bold;">{city_data['city']}</div>
-                    <div style="width: 50px; text-align: right; font-weight: bold; color: {city_data['color']};">{city_data['aqi']}</div>
-                    <div style="width: 100px; text-align: right; color: {city_data['color']};">{city_data['category']}</div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with col2:
-            st.markdown('<h4 style="text-align: center; color: #F44336;">🏭 Cities with Worst Air Quality</h4>', unsafe_allow_html=True)
-            
-            # Create a table for worst cities
-            for i, city_data in enumerate(leaderboard["worst"]):
-                bg_color = "rgba(255, 255, 255, 0.05)"
-                if i % 2 == 0:
-                    bg_color = "rgba(255, 255, 255, 0.02)"
-                    
-                st.markdown(f"""
-                <div style="display: flex; align-items: center; padding: 8px 15px; background-color: {bg_color}; border-radius: 5px; margin-bottom: 5px;">
-                    <div style="width: 30px; font-weight: bold; color: #e0e0e0;">#{i+1}</div>
-                    <div style="flex-grow: 1; font-weight: bold;">{city_data['city']}</div>
-                    <div style="width: 50px; text-align: right; font-weight: bold; color: {city_data['color']};">{city_data['aqi']}</div>
-                    <div style="width: 100px; text-align: right; color: {city_data['color']};">{city_data['category']}</div>
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.info("Loading leaderboard data...")
-        
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # 7-Day Weather Forecast
-    st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-    st.markdown('<h3 style="margin-bottom: 20px; text-align: center;">7-Day Weather Forecast</h3>', unsafe_allow_html=True)
-    
-    forecast = st.session_state.forecast
-    if isinstance(forecast, list):
-        # Create forecast cards
-        forecast_cols = st.columns(7)
-        
-        # Custom CSS for weather icons
-        st.markdown("""
-        <style>
-        .weather-icon {
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
-        .forecast-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 15px 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            height: 100%;
-        }
-        .forecast-date {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .forecast-temp {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 5px 0;
-            color: #4776E6;
-        }
-        .forecast-desc {
-            font-size: 12px;
-            color: #e0e0e0;
-            margin-top: 5px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        # Weather icon mapping
-        weather_icons = {
-            "01d": "☀️", "01n": "🌙",  # clear sky
-            "02d": "⛅", "02n": "☁️",  # few clouds
-            "03d": "☁️", "03n": "☁️",  # scattered clouds
-            "04d": "☁️", "04n": "☁️",  # broken clouds
-            "09d": "🌧️", "09n": "🌧️",  # shower rain
-            "10d": "🌦️", "10n": "🌧️",  # rain
-            "11d": "⛈️", "11n": "⛈️",  # thunderstorm
-            "13d": "❄️", "13n": "❄️",  # snow
-            "50d": "🌫️", "50n": "🌫️",  # mist
-        }
-        
-        for i, day in enumerate(forecast):
-            with forecast_cols[i]:
-                icon = weather_icons.get(day.get("icon", "01d"), "☁️")
-                st.markdown(f"""
-                <div class="forecast-card">
-                    <div class="forecast-date">{day["date"]}</div>
-                    <div class="weather-icon">{icon}</div>
-                    <div class="forecast-temp">{day["temp"]}°C</div>
-                    <div class="forecast-desc">{day["description"]}</div>
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.error("Unable to load forecast data.")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+
     
     # Multi-city comparison chart
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
