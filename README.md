@@ -94,7 +94,7 @@ The **Indian Lungs Quality Dashboard** is an advanced AQI monitoring and analysi
 
 1️⃣ Clone this repository:  
 ```bash
-git clone https://github.com/yourusername/Indian-Lungs-AQI-Dashboard.git
+git clone https://github.com/StrimCoder/Indian-Lungs-Quality.git
 ```
 
 2️⃣ Install the required libraries:  
