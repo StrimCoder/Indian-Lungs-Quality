@@ -34,9 +34,40 @@ The **Indian Lungs Quality Dashboard** is an advanced AQI monitoring and analysi
 
 ---
 
+🗂️ Project Structure
+
+📁 INDIAN LUNGS QUALITY/
+├── 📂 modules/
+│   └── animated_trend.py
+|   ├── aqi_gauge.py
+│   ├── aqi_leaderbord.py
+│   ├── fatch_data.py
+│   └── multi_city_chart.py
+│   └── nearby_hospital.py
+│   ├── twitter_feed.py
+│   |── wind_compass.py
+│
+|__ 📄 app.py
+├── 📄 requirements.txt
+└── 📄 README.md
+
+---
+
 ## 📸 Dashboard Preview  
 
-*(Add a few screenshots or GIFs of your dashboard here for a visual overview.)*
+![Screenshot 2025-06-11 081742](https://github.com/user-attachments/assets/af6cdfa0-f37e-4749-8ad4-123a5cd84300)
+
+![Screenshot 2025-06-11 081802](https://github.com/user-attachments/assets/fcbbe827-61d3-4eaa-9795-5c5020cd748a)
+
+![Screenshot 2025-06-11 081817](https://github.com/user-attachments/assets/150a00ce-b2d8-4614-bedf-caf6bd3d8c59)
+
+![Screenshot 2025-06-11 081828](https://github.com/user-attachments/assets/8954b289-f81a-4747-9930-43b57c89af02)
+
+![Screenshot 2025-06-11 081837](https://github.com/user-attachments/assets/150464a3-a445-4489-a5f9-206ee614e57d)
+
+![Screenshot 2025-06-11 081854](https://github.com/user-attachments/assets/8ae09d8a-bee3-498e-8043-eb0303075d7b)
+
+![Screenshot 2025-06-11 081900](https://github.com/user-attachments/assets/61204867-9d95-4f54-ac77-c3ec0b1f7b66)
 
 ---
 
@@ -97,12 +128,6 @@ streamlit run app.py
 
 ---
 
-## 📣 Download & Explore  
-
-👉 [**Download Project Files**](https://github.com/yourusername/Indian-Lungs-AQI-Dashboard/archive/refs/heads/main.zip)
-
----
-
 ## 🙌 Contribution  
 
 Feel free to fork this project, improve it, and raise a pull request. Together, let’s build a cleaner, healthier India! 🇮🇳💚  
@@ -111,5 +136,21 @@ Feel free to fork this project, improve it, and raise a pull request. Together, 
 
 ## 📧 Contact  
 
-For queries, feedback, or collaboration:  
-**📨 bhushannavsagar07@gmail.com**  
+For queries, feedback, or collaboration: 
+
+**📨 bhushannavsagar07@gmail.com** 
+
+---
+
+## 📃 License  
+
+This project is **open-source** and available under the [MIT License](LICENSE).
+
+---
+
+## 👑 Created By  
+
+**Bhushan Navsagar** ✨  
+[GitHub](https://github.com/StrimCoder) | [LinkedIn](https://www.linkedin.com/in/bhushan-navsagar-2b683a293/)
+
+
