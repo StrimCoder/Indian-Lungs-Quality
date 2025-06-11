@@ -36,6 +36,7 @@ The **Indian Lungs Quality Dashboard** is an advanced AQI monitoring and analysi
 
 🗂️ Project Structure
 
+```
 📁 INDIAN LUNGS QUALITY/
 ├── 📂 modules/
 │   └── animated_trend.py
@@ -50,7 +51,7 @@ The **Indian Lungs Quality Dashboard** is an advanced AQI monitoring and analysi
 |__ 📄 app.py
 ├── 📄 requirements.txt
 └── 📄 README.md
-
+```
 ---
 
 ## 📸 Dashboard Preview  
